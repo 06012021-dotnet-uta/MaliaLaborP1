@@ -1,0 +1,24 @@
+﻿@model Project1.Models.ProductViewModel
+
+@{ ViewData["Title"] = "Product Details"; }
+
+<div class="text-center">
+    <h1 class="display-4">Details for product</h1>
+</div>
+
+<div>
+    <img src="@Url.Content(Model.productPictureVm.LargePath)" style="vertical-align:top" height="500">
+    <h2>
+        @Html.DisplayFor(modelItem => Model.productVm.Name)
+    </h2>
+    <p>
+        @Html.DisplayFor(modelItem => Model.productVm.Description)
+    </p>
+</div>
+
+<div>
+    @Html.DisplayFor(modelItem => Model.productVm.Price)
+    <p>
+        put inventory count here later
+    </p>
+</div>

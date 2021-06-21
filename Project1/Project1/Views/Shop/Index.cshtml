@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Project1DbContext.Store> 
+
+@{ ViewData["Title"] = "Shopping"; }
+
+<div class="col-6">
+    <h1 class="display-4">Store Selection</h1>
+    <h2>Select a store to begin</h2>      
+    <a class="nav-link text-dark" asp-area="" asp-controller="Shop" asp-action="Products">Products page</a>
+</div>
+
+<div class="d-flex flex-row">
+    <div class="p-4">
+        <img src="/Images/map.jpg" alt="Tamriel Map" style="vertical-align:top" width="500">
+    </div>
+    <div class="p-5">
+        <table class="table">
+            @*change model^ to view model after changes made to other files*@
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.City)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Region)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.City)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Region)
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

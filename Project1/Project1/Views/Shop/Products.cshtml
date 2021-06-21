@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Project1.Models.ProductViewModel>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Product inventory for store</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.productVm.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.productVm.Price)
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <img src= "@Url.Content(item.productPictureVm.SmallPath)" style="vertical-align:top" height="50">
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.productVm.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.productVm.Price)
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.productVm.Id">Add to cart</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
