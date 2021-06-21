@@ -25,14 +25,12 @@ namespace Staircase
 
         public static void staircase(int n)
         {
-            string display = "";
+            string display = "", line;
             for(int i = 1; i <= n; i++)
             {
-                for (int spaces = n - i; spaces > 0; spaces--)
-                    display += ' ';
-                for (int symbols = 1; symbols <= i; symbols++)
-                    display += '#';
-                display += "\n";
+                line = "";
+                display += line.PadLeft(n - i, ' ');
+                display += line.PadRight(i, '#') + "\n";
             }
             Console.WriteLine(display);
         }
