@@ -1,27 +1,35 @@
-﻿@model IEnumerable<Project1DbContext.Store> 
+﻿@model IEnumerable<Project1.Models.OrderHistoryViewModel>
 
 @{ ViewData["Title"] = "Shopping"; }
 
-<div class="col-6">
-    <h1 class="display-4">Store Selection</h1>
-    <h2>Select a store to begin</h2>      
-    <a class="nav-link text-dark" asp-area="" asp-controller="Shop" asp-action="Products">Products page</a>
+<div class="text-center">
+    <h1 class="display-4">Select a store to begin.</h1>
 </div>
 
 <div class="d-flex flex-row">
-    <div class="p-4">
-        <img src="/Images/map.jpg" alt="Tamriel Map" style="vertical-align:top" width="500">
+    <div class="col-9">
+        <img src="/Images/map-icons.jpg" alt="Tamriel Map" style="vertical-align:top" width="800" usemap="#storeMap">
+        <map name="storeMap">
+            <area shape="rect" coords="315,0, 350,60" alt="Solitude" href="" title="Solitude" /> @*put in links later*@
+            <area shape="rect" coords="408,105,443,155" alt="Whiterun" href="" title="Whiterun" />
+            <area shape="rect" coords="485,146,518,199" alt="Riften" href="" title="Riften" />
+            <area shape="rect" coords="566,162,601,213" alt="Balmera" href="" title="Balmera" />
+            <area shape="rect" coords="678,300,646,248" alt="Mournhold" href="" title="Mournhold" />
+            <area shape="rect" coords="616,374,584,320" alt="Stormhold" href="" title="Stormhold" />
+            <area shape="rect" coords="477,371,444,320" alt="Bravil" href="" title="Bravil" />
+            <area shape="rect" coords="413,237,446,290" alt="IC" href="" title="Imperial City" />
+            <area shape="rect" coords="304,415,336,466" alt="Elden" href="" title="Elden Root" />
+            <area shape="rect" coords="127,117,160,170" alt="Wayrest" href="" title="Wayrest" />
+            <area shape="rect" coords="30,185,62,237" alt="Daggerfall" href="" title="Daggerfall" />
+            <area shape="rect" coords="33,453,66,506" alt="Alinor" href="" title="Alinor" />
+        </map>
     </div>
-    <div class="p-5">
+    <div class="col-5">
         <table class="table">
-            @*change model^ to view model after changes made to other files*@
             <thead>
                 <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.City)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Region)
+                    <th class="text-center text-light">
+                        Location
                     </th>
                 </tr>
             </thead>
@@ -31,11 +39,8 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.City)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Region)
+                            <td class="text-center text-light"> @*stores link to products page with inventories from that store*@
+                                <a class="nav-link text-light" asp-area="" asp-controller="Shop" asp-action="Products">@Html.DisplayFor(modelItem => item.storeVm.City), @Html.DisplayFor(modelItem => item.storeVm.Region)</a>                                
                             </td>
                         </tr>
                     }
@@ -44,3 +49,5 @@
         </table>
     </div>
 </div>
+
+<a class="nav-link text-light" asp-area="" asp-controller="Shop" asp-action="Products">Products page</a>

@@ -10,5 +10,6 @@ namespace Project1.Models
     {
         public Product productVm { get; set; }
         public ProductPicture productPictureVm { get; set; }
+        public Inventory inventoryVm { get; set; }
     }
 }

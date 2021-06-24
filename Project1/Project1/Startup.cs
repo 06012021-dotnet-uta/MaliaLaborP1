@@ -45,7 +45,7 @@ namespace Project1
             });
 
             services.AddScoped<ProductHandler>();
-            services.AddScoped<StoreHandler>();
+            services.AddScoped<OrderHistoryHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
