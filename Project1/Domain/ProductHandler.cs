@@ -46,13 +46,14 @@ namespace Domain
             return pictures;
         }
 
-        public List<Inventory> InventoryList()
+        //TODO use this method somewhere
+        public List<Inventory> InventoryList(int storeId) //might need to take out storeId
         {
 
             List<Inventory> inventoryList = null;
             try
             {
-                inventoryList = _context.Inventories.ToList();
+                inventoryList = _context.Inventories.Where(x => x.StoreId == storeId).ToList();
             }
             catch (Exception)
             {

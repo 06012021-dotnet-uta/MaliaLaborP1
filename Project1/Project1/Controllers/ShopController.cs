@@ -14,19 +14,23 @@ namespace Project1.Controllers
     {
         private readonly ILogger<ShopController> _logger;
         private readonly ProductHandler _productHandler;
-        private readonly StoreHandler _storeHandler;
+        private readonly OrderHistoryHandler _orderHandler;
 
-        public ShopController(ProductHandler productHandler, StoreHandler storeHandler, ILogger<ShopController> logger)
+        public ShopController(ProductHandler productHandler, OrderHistoryHandler orderHandler, ILogger<ShopController> logger)
         {
             this._productHandler = productHandler;
-            this._storeHandler = storeHandler;
+            this._orderHandler = orderHandler;
             this._logger = logger;
         }
 
         public IActionResult Index()
         {
-            List<Store> storeList = _storeHandler.StoreList();
-            return View(storeList);
+            var stores = from s in _orderHandler.StoreList()
+                         select new OrderHistoryViewModel
+                         {
+                             storeVm = s
+                         };
+            return View(stores);
         }
 
         public IActionResult Details(int? id)

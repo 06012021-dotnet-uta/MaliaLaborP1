@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Project1.Models
 {
-    public class StoreViewModel
+    public class OrderHistoryViewModel
     {
+        public Invoice invoiceVm { get; set; }
+        public OrderLine orderLineVm { get; set; }
         public Store storeVm { get; set; }
-        //public Invoice invoiceVm { get; set; } //for order history, add other tables needed for join also
+        public Customer customerVm { get; set; }
     }
 }
