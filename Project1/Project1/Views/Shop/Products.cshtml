@@ -5,17 +5,21 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Product inventory for store</h1>
+    <h1 class="display-4">Product inventory for</h1>
+    <h1 class="display-4">@Html.DisplayFor(model => Model.FirstOrDefault().city), @Html.DisplayFor(model =>Model.FirstOrDefault().region)</h1>
     <table class="table text-light">
         <thead>
             <tr>
                 <th>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.productVm.Name)
+                    @Html.DisplayNameFor(model => model.productVm.Name)                    
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.productVm.Price)
+                </th>
+                <th>
+                    Inventory Count
                 </th>
             </tr>
         </thead>
@@ -33,6 +37,9 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.productVm.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.inventoryVm.Amount)
                         </td>
                     </tr>
                 }

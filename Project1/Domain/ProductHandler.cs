@@ -18,7 +18,6 @@ namespace Domain
 
         public List<Product> ProductList()
         {
-
             List<Product> products = null;
             try
             {
@@ -33,7 +32,6 @@ namespace Domain
 
         public List<ProductPicture> PicturesList()
         {
-
             List<ProductPicture> pictures = null;
             try
             {
@@ -46,20 +44,32 @@ namespace Domain
             return pictures;
         }
 
-        //TODO use this method somewhere
-        public List<Inventory> InventoryList(int storeId) //might need to take out storeId
+        public List<Inventory> InventoryList(int id)
         {
-
             List<Inventory> inventoryList = null;
             try
             {
-                inventoryList = _context.Inventories.Where(x => x.StoreId == storeId).ToList();
+                inventoryList = _context.Inventories.Where(x => x.StoreId == id).ToList();
             }
             catch (Exception)
             {
                 Console.WriteLine("Exception.");
             }
             return inventoryList;
+        }
+
+        public Store StoreList(int id)
+        {
+            Store store = null;
+            try
+            {
+                store = _context.Stores.Where(x => x.Id == id).First();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Exception.");
+            }
+            return store;
         }
     }
 }

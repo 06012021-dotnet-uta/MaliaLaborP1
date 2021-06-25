@@ -34,16 +34,6 @@ namespace Project1
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 }
             });
-
-            // session stuff
-            services.AddDistributedMemoryCache();
-            services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromSeconds(10);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
-
             services.AddScoped<ProductHandler>();
             services.AddScoped<OrderHistoryHandler>();
         }
@@ -67,8 +57,6 @@ namespace Project1
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.UseSession(); // for sessions
 
             app.UseEndpoints(endpoints =>
             {

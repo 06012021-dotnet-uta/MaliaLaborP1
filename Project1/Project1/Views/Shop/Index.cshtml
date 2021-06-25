@@ -8,21 +8,23 @@
 
 <div class="d-flex flex-row">
     <div class="col-9">
-        <img src="/Images/map-icons.jpg" alt="Tamriel Map" style="vertical-align:top" width="800" usemap="#storeMap">
-        <map name="storeMap">
-            <area shape="rect" coords="315,0, 350,60" alt="Solitude" href="" title="Solitude" /> @*put in links later*@
-            <area shape="rect" coords="408,105,443,155" alt="Whiterun" href="" title="Whiterun" />
-            <area shape="rect" coords="485,146,518,199" alt="Riften" href="" title="Riften" />
-            <area shape="rect" coords="566,162,601,213" alt="Balmera" href="" title="Balmera" />
-            <area shape="rect" coords="678,300,646,248" alt="Mournhold" href="" title="Mournhold" />
-            <area shape="rect" coords="616,374,584,320" alt="Stormhold" href="" title="Stormhold" />
-            <area shape="rect" coords="477,371,444,320" alt="Bravil" href="" title="Bravil" />
-            <area shape="rect" coords="413,237,446,290" alt="IC" href="" title="Imperial City" />
-            <area shape="rect" coords="304,415,336,466" alt="Elden" href="" title="Elden Root" />
-            <area shape="rect" coords="127,117,160,170" alt="Wayrest" href="" title="Wayrest" />
-            <area shape="rect" coords="30,185,62,237" alt="Daggerfall" href="" title="Daggerfall" />
-            <area shape="rect" coords="33,453,66,506" alt="Alinor" href="" title="Alinor" />
-        </map>
+        <form asp-action="Products">
+            <img src="/Images/map-icons.jpg" alt="Tamriel Map" style="vertical-align:top" width="800" usemap="#storeMap">
+            <map name="storeMap">
+                <area shape="rect" coords="315,0, 350,60" alt="Solitude" href=@Url.Action("Products", "Shop", new {id = 2}) title="Solitude" />
+                <area shape="rect" coords="408,105,443,155" alt="Whiterun" href=@Url.Action("Products", "Shop", new {id = 1}) title="Whiterun" />
+                <area shape="rect" coords="485,146,518,199" alt="Riften" href=@Url.Action("Products", "Shop", new {id = 3}) title="Riften" />
+                <area shape="rect" coords="566,162,601,213" alt="Balmera" href=@Url.Action("Products", "Shop", new {id = 4}) title="Balmera" />
+                <area shape="rect" coords="678,300,646,248" alt="Mournhold" href=@Url.Action("Products", "Shop", new {id = 5}) title="Mournhold" />
+                <area shape="rect" coords="616,374,584,320" alt="Stormhold" href=@Url.Action("Products", "Shop", new {id = 6}) title="Stormhold" />
+                <area shape="rect" coords="477,371,444,320" alt="Bravil" href=@Url.Action("Products", "Shop", new {id = 7}) title="Bravil" />
+                <area shape="rect" coords="413,237,446,290" alt="IC" href=@Url.Action("Products", "Shop", new {id = 8}) title="Imperial City" />
+                <area shape="rect" coords="304,415,336,466" alt="Elden" href=@Url.Action("Products", "Shop", new {id = 12}) title="Elden Root" />
+                <area shape="rect" coords="127,117,160,170" alt="Wayrest" href=@Url.Action("Products", "Shop", new {id = 10}) title="Wayrest" />
+                <area shape="rect" coords="30,185,62,237" alt="Daggerfall" href=@Url.Action("Products", "Shop", new {id = 9}) title="Daggerfall" />
+                <area shape="rect" coords="33,453,66,506" alt="Alinor" href=@Url.Action("Products", "Shop", new {id = 11}) title="Alinor" />
+            </map>
+        </form>
     </div>
     <div class="col-5">
         <table class="table">
@@ -40,7 +42,7 @@
                     {
                         <tr>
                             <td class="text-center text-light"> @*stores link to products page with inventories from that store*@
-                                <a class="nav-link text-light" asp-area="" asp-controller="Shop" asp-action="Products">@Html.DisplayFor(modelItem => item.storeVm.City), @Html.DisplayFor(modelItem => item.storeVm.Region)</a>                                
+                                <a class="nav-link text-light" asp-area="" asp-controller="Shop" asp-action="Products" asp-route-id="@item.storeVm.Id">@Html.DisplayFor(modelItem => item.storeVm.City), @Html.DisplayFor(modelItem => item.storeVm.Region)</a>                                
                             </td>
                         </tr>
                     }

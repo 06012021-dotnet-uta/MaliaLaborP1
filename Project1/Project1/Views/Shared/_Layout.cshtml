@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿<?php
+session_start();
+?>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -8,6 +12,10 @@
     <link rel="stylesheet" href="~/css/CustomStyles.css" />
 </head>
 <body>
+    <?php
+    $_SESSION["username"] = "";
+    $_SESSION["store"] = "";
+    ?>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-black border-bottom box-shadow mb-3">
             <div class="container">
