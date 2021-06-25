@@ -39,11 +39,13 @@ namespace Project1.Controllers
                 return NotFound();
             var tables = from p in _productHandler.ProductList()
                          join i in _productHandler.PicturesList() on p.Id equals i.ProductId into table1
+                         join o in _productHandler.InventoryList((int)id) on p.Id equals o.ProductId
                          from i in table1.DefaultIfEmpty()
                          select new ProductViewModel
                          {
                              productVm = p,
-                             productPictureVm = i
+                             productPictureVm = i,
+                             inventoryVm = o
                          };
             try
             {
@@ -58,22 +60,22 @@ namespace Project1.Controllers
             }
         }
 
-        public IActionResult Products()
+        public IActionResult Products(int? id)
         {
-            // pass single table into view
-            //List<Product> productsList = _productHandler.ProductList();
-            //return View(productsList);
 
             // join tables together to pass into view
             var tables = from p in _productHandler.ProductList()
                          join i in _productHandler.PicturesList() on p.Id equals i.ProductId into table1
+                         join o in _productHandler.InventoryList((int)id) on p.Id equals o.ProductId
                          from i in table1.DefaultIfEmpty()
                          select new ProductViewModel
                          {
                              productVm = p,
-                             productPictureVm = i
+                             productPictureVm = i,
+                             inventoryVm = o,
+                             city = _productHandler.StoreList((int)id).City.ToString(),
+                             region = _productHandler.StoreList((int)id).Region
                          };
-            // need to add shop inventory to join
             return View(tables);
         }
 

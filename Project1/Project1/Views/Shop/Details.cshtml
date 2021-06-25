@@ -16,9 +16,12 @@
     </p>
 </div>
 
-<div>
-    @Html.DisplayFor(modelItem => Model.productVm.Price)
-    <p>
-        put inventory count here later
-    </p>
+<div class="d-flex flex-row">
+    <div class="col-6">
+        <h4>Price:</h4>
+        @Html.DisplayFor(modelItem => Model.productVm.Price)
+    </div>
+    <div class="col-6">
+        <h4>Inventory count:</h4>@Html.DisplayFor(modelItem => Model.inventoryVm.Amount)
+    </div>
 </div>
