@@ -1,5 +1,12 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Project1.Models.CustomerViewModel
+
 @{
+    ViewData["Title"] = "Login";
 }
+
+<div class="text-center">
+    <h1 class="display-4">User logged in</h1>
+    <p>
+        @Html.DisplayFor(model => model.customerVm.Username)
+    </p>
+</div>

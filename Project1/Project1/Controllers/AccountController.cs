@@ -6,11 +6,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Project1DbContext;
+using Domain;
+using Project1.Models;
 
 namespace Project1.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly ILogger<AccountController> _logger;
+        private readonly CustomerHandler _customerHandler;
+
+        public AccountController(CustomerHandler customerHandler, ILogger<AccountController> logger)
+        {
+            this._logger = logger;
+            this._customerHandler = customerHandler;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -42,11 +53,19 @@ namespace Project1.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (Project1DBContext db = new Project1DBContext())
+                bool success = _customerHandler.LoginCustomer(objUser.Username, objUser.Password);
+                if (success)
                 {
-                    var obj = db.Customers.Where(x => x.Username.Equals(objUser.Username) && x.Password.Equals(objUser.Password)).FirstOrDefault();
-                    return View(obj);
+                    var tables = from c in _customerHandler.CustomerList()
+                                 select new CustomerViewModel
+                                 {
+                                     customerVm = c
+                                 };
+                    var customer = tables.Where(x => x.customerVm.Username == objUser.Username && x.customerVm.Password == objUser.Password).First();
+                    return View(customer);
                 }
+                else
+                    return NotFound();
             }
             return NotFound();
         }

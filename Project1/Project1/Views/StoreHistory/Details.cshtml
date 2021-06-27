@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Project1.Models.StoreHistoryViewModel>
+
+@{
+    ViewData["Title"] = "Order History";
+}
+<div class="text-center">
+    @if (Model != null && Model.Any())
+    {
+        <h1 class="display-4">Store Order History for</h1>
+        <h1 class="display-3">@Html.DisplayFor(model => Model.First().storeVm.City), @Html.DisplayFor(model => Model.First().storeVm.Region)</h1>
+    }
+    else
+    {
+        <h1 class="display-4">No order history found for store.</h1>
+    }
+</div>
+
+<div>
+    @if (Model != null && Model.Any())
+    {
+        int prevId = 0;
+        <table class="table text-light">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.invoiceVm.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.invoiceVm.InvoiceDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.productVm.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.orderLineVm.Amount)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>                
+                @foreach (var item in Model)
+                {
+                <tr>
+                    @if (item.invoiceVm.Id != prevId)
+                    {
+                        prevId = item.invoiceVm.Id;
+                        <td>
+                            @Html.DisplayFor(modelItem => item.invoiceVm.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.invoiceVm.InvoiceDate)
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                        <td></td>
+                    }
+                    <td>
+                        @Html.DisplayFor(modelItem => item.productVm.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.orderLineVm.Amount)
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
