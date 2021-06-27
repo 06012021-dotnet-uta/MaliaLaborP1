@@ -17,11 +17,15 @@
 </div>
 
 <div class="d-flex flex-row">
-    <div class="col-6">
+    <div class="col-4">
         <h4>Price:</h4>
         @Html.DisplayFor(modelItem => Model.productVm.Price)
     </div>
-    <div class="col-6">
+    <div class="col-4">
         <h4>Inventory count:</h4>@Html.DisplayFor(modelItem => Model.inventoryVm.Amount)
+    </div>
+    <div class="col-4">
+        <h4>Add to cart:</h4>
+        <p>put in text box and button for adding to cart</p>
     </div>
 </div>

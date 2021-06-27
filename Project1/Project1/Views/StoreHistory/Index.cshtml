@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Project1.Models.OrderHistoryViewModel>
+﻿@model IEnumerable<Project1.Models.StoreHistoryViewModel>
 
 @{
     ViewData["Title"] = "Store Order History";
@@ -18,6 +18,6 @@
                 <option value="@item.storeVm.Id">@Html.DisplayFor(model => item.storeVm.City)</option>
             }
         </select>
-        <input type="submit"asp-controller="OrderHistory" asp-action="Details" value="See History"/>
+        <input type="submit"asp-controller="StoreHistory" asp-action="Details" value="See History"/>
     </form>
 </div>

@@ -14,19 +14,19 @@ namespace Project1.Controllers
     {
         private readonly ILogger<ShopController> _logger;
         private readonly ProductHandler _productHandler;
-        private readonly OrderHistoryHandler _orderHandler;
+        private readonly StoreHandler _storeHandler;
 
-        public ShopController(ProductHandler productHandler, OrderHistoryHandler orderHandler, ILogger<ShopController> logger)
+        public ShopController(ProductHandler productHandler, StoreHandler storeHandler, ILogger<ShopController> logger)
         {
             this._productHandler = productHandler;
-            this._orderHandler = orderHandler;
+            this._storeHandler = storeHandler;
             this._logger = logger;
         }
 
         public IActionResult Index()
         {
-            var stores = from s in _orderHandler.StoreList()
-                         select new OrderHistoryViewModel
+            var stores = from s in _storeHandler.StoreList()
+                         select new StoreHistoryViewModel
                          {
                              storeVm = s
                          };
@@ -73,8 +73,8 @@ namespace Project1.Controllers
                              productVm = p,
                              productPictureVm = i,
                              inventoryVm = o,
-                             city = _productHandler.StoreList((int)id).City.ToString(),
-                             region = _productHandler.StoreList((int)id).Region
+                             city = _storeHandler.SearchStore((int)id).City,
+                             region = _storeHandler.SearchStore((int)id).Region
                          };
             return View(tables);
         }

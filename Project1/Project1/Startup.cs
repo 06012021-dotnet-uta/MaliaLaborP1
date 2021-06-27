@@ -34,8 +34,10 @@ namespace Project1
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 }
             });
+            services.AddScoped<CustomerHandler>();
+            services.AddScoped<InvoiceHandler>();
             services.AddScoped<ProductHandler>();
-            services.AddScoped<OrderHistoryHandler>();
+            services.AddScoped<StoreHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

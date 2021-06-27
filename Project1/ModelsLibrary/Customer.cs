@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -13,10 +14,23 @@ namespace Project1DbContext
             PreferredStores = new HashSet<PreferredStore>();
         }
 
+        [Display(Name = "Customer ID")]
         public int Id { get; set; }
+
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
+
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
+
+        [Display(Name = "Username")]
+        [Required]
+        [MaxLength(20)]
         public string Username { get; set; }
+
+        [Display(Name = "Password")]
+        [Required]
+        [MaxLength(20)]
         public string Password { get; set; }
 
         public virtual ICollection<Invoice> Invoices { get; set; }

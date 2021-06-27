@@ -16,6 +16,10 @@ namespace Domain
             this._context = context;            
         }
 
+        /// <summary>
+        /// Accesses the database to return list of products.
+        /// </summary>
+        /// <returns>List of Product objects within the database.</returns>
         public List<Product> ProductList()
         {
             List<Product> products = null;
@@ -30,6 +34,24 @@ namespace Domain
             return products;
         }
 
+        public Product SearchProduct(int productId)
+        {
+            Product product = null;
+            try
+            {
+                product = _context.Products.Where(x => x.Id ==productId).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Exception.");
+            }
+            return product;
+        }
+
+        /// <summary>
+        /// Accesses the database to return list of pictures associated with products.
+        /// </summary>
+        /// <returns>List of ProductPicture obbjects within the database.</returns>
         public List<ProductPicture> PicturesList()
         {
             List<ProductPicture> pictures = null;
@@ -44,32 +66,23 @@ namespace Domain
             return pictures;
         }
 
-        public List<Inventory> InventoryList(int id)
+        /// <summary>
+        /// Accesses the database to return Inventory objects associated with given ID
+        /// </summary>
+        /// <param name="storeId">ID of store to get inventory for.</param>
+        /// <returns>Inventory objects with store ID matching ID given to method</returns>
+        public List<Inventory> InventoryList(int storeId)
         {
             List<Inventory> inventoryList = null;
             try
             {
-                inventoryList = _context.Inventories.Where(x => x.StoreId == id).ToList();
+                inventoryList = _context.Inventories.Where(x => x.StoreId == storeId).ToList();
             }
             catch (Exception)
             {
                 Console.WriteLine("Exception.");
             }
             return inventoryList;
-        }
-
-        public Store StoreList(int id)
-        {
-            Store store = null;
-            try
-            {
-                store = _context.Stores.Where(x => x.Id == id).First();
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Exception.");
-            }
-            return store;
         }
     }
 }
