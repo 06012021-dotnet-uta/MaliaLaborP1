@@ -31,7 +31,8 @@ namespace Domain
             }
             catch (Exception)
             {
-                throw;
+                // put log info here
+                return success;                
             }
             return success;
         }

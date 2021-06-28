@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Project1.Models.StoreHistoryViewModel>
+@using Microsoft.AspNetCore.Http;
 
 @{ ViewData["Title"] = "Shopping"; }
 
@@ -41,8 +42,9 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td class="text-center text-light"> @*stores link to products page with inventories from that store*@
-                                <a class="nav-link text-light" asp-area="" asp-controller="Shop" asp-action="Products" asp-route-id="@item.storeVm.Id">@Html.DisplayFor(modelItem => item.storeVm.City), @Html.DisplayFor(modelItem => item.storeVm.Region)</a>                                
+                            <td class="text-center text-light">
+                                @*stores link to products page with inventories from that store*@
+                                <a class="nav-link text-light" asp-area="" asp-controller="Shop" asp-action="Products" asp-route-id="@item.storeVm.Id">@Html.DisplayFor(modelItem => item.storeVm.City), @Html.DisplayFor(modelItem => item.storeVm.Region)</a>
                             </td>
                         </tr>
                     }

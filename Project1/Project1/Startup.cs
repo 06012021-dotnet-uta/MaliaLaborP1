@@ -29,11 +29,13 @@ namespace Project1
             services.AddControllersWithViews();
             services.AddDbContext<Project1DBContext>(options =>
             {
-                if(!options.IsConfigured)
+                if (!options.IsConfigured)
                 {
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 }
             });
+            services.AddMvc().AddSessionStateTempDataProvider();
+            services.AddSession();
             services.AddScoped<CustomerHandler>();
             services.AddScoped<InvoiceHandler>();
             services.AddScoped<ProductHandler>();
@@ -53,6 +55,7 @@ namespace Project1
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

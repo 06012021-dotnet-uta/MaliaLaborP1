@@ -1,8 +1,15 @@
-﻿@{
+﻿@model Project1.Models.CustomerViewModel
+@using Microsoft.AspNetCore.Http;
+
+@{
     ViewData["Title"] = "Account Details";
 }
 
 <div class="text-center">
     <h1 class="display-4">Account Details</h1>
-    <p>Put some account info here</p>
+    <p>@Html.DisplayFor(model => model.customerVm.Username)</p>
+</div>
+
+<div>
+    <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
 </div>
