@@ -4,10 +4,12 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Project1DbContext;
 using Domain;
 using Project1.Models;
+using Newtonsoft.Json;
 
 namespace Project1.Controllers
 {
@@ -24,7 +26,14 @@ namespace Project1.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if (HttpContext.Session.GetString("customerSession") == null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Details", "Account");
+            }            
         }
 
         public IActionResult Create()
@@ -39,7 +48,8 @@ namespace Project1.Controllers
 
         public IActionResult Details()
         {
-            return View();
+            var customer = JsonConvert.DeserializeObject<CustomerViewModel>(HttpContext.Session.GetString("customerSession"));
+            return View(customer);
         }
 
         public IActionResult History()
@@ -49,7 +59,7 @@ namespace Project1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(Customer objUser) // need to do something with sessions here?
+        public ActionResult Login(Customer objUser)
         {
             if (ModelState.IsValid)
             {
@@ -62,12 +72,20 @@ namespace Project1.Controllers
                                      customerVm = c
                                  };
                     var customer = tables.Where(x => x.customerVm.Username == objUser.Username && x.customerVm.Password == objUser.Password).First();
-                    return View(customer);
+                    //serialize customer into a string
+                    HttpContext.Session.SetString("customerSession", JsonConvert.SerializeObject(customer));                    
+                    return RedirectToAction("Details", "Account");
                 }
                 else
-                    return NotFound();
+                    return View("Index");
             }
-            return NotFound();
+            return View("Index");
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return View("Index");
         }
     }
 }
