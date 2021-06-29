@@ -17,6 +17,12 @@ namespace Domain
             this._context = context;
         }
 
+        /// <summary>
+        /// Returns true if customer credentials match an entry in the database.
+        /// </summary>
+        /// <param name="username">Username of customer.</param>
+        /// <param name="password">Password of customer.</param>
+        /// <returns>Boolean reflecting if customer exists with specified credentials.</returns>
         public bool LoginCustomer(string username, string password)
         {
             bool success = false;
@@ -37,6 +43,10 @@ namespace Domain
             return success;
         }
 
+        /// <summary>
+        /// Accesses the database and returns Customer entries.
+        /// </summary>
+        /// <returns>List of Customer entries within the databbase.</returns>
         public List<Customer> CustomerList()
         {
             List<Customer> customers = null;
@@ -50,6 +60,7 @@ namespace Domain
             }
             return customers;
         }
+
 
         public Customer SearchCustomer(int id)
         {

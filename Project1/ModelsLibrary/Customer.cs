@@ -17,15 +17,20 @@ namespace Project1DbContext
         [Display(Name = "Customer ID")]
         public int Id { get; set; }
 
+
+        [Required]
+        [MaxLength(20)]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
+        [Required]
+        [MaxLength(20)]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
         [Display(Name = "Username")]
         [Required]
-        [MaxLength(20)]
+        [MaxLength(20)]        
         public string Username { get; set; }
 
         [Display(Name = "Password")]

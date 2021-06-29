@@ -7,11 +7,13 @@
 
 <div class="text-center">
     <h1 class="display-4">Shopping Cart</h1>
+</div>
 
+<div class="align-content-center">
     @{
         if (Context.Session.GetString("cart") != null && Context.Session.GetString("cart") != "{}")
         {
-            <table>
+            <table class="table text-light col-auto">
                 <thead>
                     <tr>
                         <th>
@@ -20,27 +22,38 @@
                         <th>
                             Count
                         </th>
+                        <th>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in JsonConvert.DeserializeObject<Dictionary<int, int>>(Context.Session.GetString("cart")))
                     {
-                        <tr>
-                            <td>
-                                @item.Key
-                            </td>
-                            <td>
-                                @item.Value
-                            </td>
-                        </tr>
+                        if (item.Value != 0)
+                        {
+                            <tr>
+                                <td>
+                                    @item.Key
+                                </td>
+                                <td>
+                                    @item.Value
+                                </td>
+                                <td>
+                                    <a class="text-light mx-auto" asp-action="Edit" asp-route-productId="@item.Key">Edit</a>
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
+            <p>add checkout button</p>
         }
         else
         {
             <p>Shopping cart is empty</p>
         }
     }
+
+    <a type="submit" asp-action="Products" value="Back to prodcucts">back to products</a>
 
 </div>

@@ -14,7 +14,6 @@ namespace Project1.Controllers
         private readonly ILogger<StoreHistoryController> _logger;
         private readonly ProductHandler _productHandler;
         private readonly StoreHandler _storeHandler;
-
         private readonly InvoiceHandler _invoiceHandler;
 
         public StoreHistoryController(ProductHandler productHandler, StoreHandler storeHandler, InvoiceHandler invoiceHandler, ILogger<StoreHistoryController> logger)
@@ -43,7 +42,7 @@ namespace Project1.Controllers
                         join p in _productHandler.ProductList() on o.ProductId equals p.Id          
                         select new StoreHistoryViewModel
                         {
-                            invoiceVm = i,                            
+                            invoiceVm = i,
                             orderLineVm = o,
                             storeVm = s,
                             productVm = p

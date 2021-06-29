@@ -1,8 +1,21 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Http;
+@using Newtonsoft.Json;
+@{
     ViewData["Title"] = "Edit cart";
+    var cart = JsonConvert.DeserializeObject<Dictionary<int, int>>(Context.Session.GetString("cart"));
+    int maxAmount = 1;
+    if(cart.ContainsKey(ViewBag.productId))
+    {
+        maxAmount = cart[ViewBag.productId];
+    }
 }
 
 <div class="text-center">
-    <h1 class="display-4">edit cart</h1>
-    <p>if user selects a product to edit in cart</p>
+    <h1 class="display-4">Edit Cart</h1>
+    <p>add number input to remove with min(1) and max(amount in cart) and buttons for submit and cancel</p>
+    <form asp-action="Remove">
+        <label for="amount">Amount</label>
+        <input type="number" id="amount" name="amount" min="1" max="@maxAmount" />
+        <input type="submit" asp-controller="Shop" asp-action="Remove" asp-route-productId="@ViewBag.productId" value="Remove from cart" />
+    </form>
 </div>
