@@ -61,7 +61,11 @@ namespace Domain
             return customers;
         }
 
-
+        /// <summary>
+        /// Accesses the database and returns a Customer object with matching ID.
+        /// </summary>
+        /// <param name="id">ID of customer to search for.</param>
+        /// <returns>Customer object with matching ID.</returns>
         public Customer SearchCustomer(int id)
         {
             Customer customer = null;
@@ -76,6 +80,11 @@ namespace Domain
             return customer;
         }
 
+        /// <summary>
+        /// Accesses the database to get PreferedStore entry for customer with matching customer ID.
+        /// </summary>
+        /// <param name="customerId">ID of customer to search for preferred store.</param>
+        /// <returns>PreferredStore entry that contains customer ID.</returns>
         public PreferredStore GetPreferredStore(int customerId)
         {
             PreferredStore store = null;

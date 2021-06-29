@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 namespace Project1.Controllers
 {
     public class AccountController : Controller
-    {        
+    {
         private readonly ILogger<AccountController> _logger;
         private readonly CustomerHandler _customerHandler;
 
@@ -33,7 +33,7 @@ namespace Project1.Controllers
             else
             {
                 return RedirectToAction("Details", "Account");
-            }            
+            }
         }
 
         public IActionResult Create()
@@ -61,28 +61,25 @@ namespace Project1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(Customer objUser)
         {
-            if (ModelState.IsValid)
+            bool success = _customerHandler.LoginCustomer(objUser.Username, objUser.Password);
+            if (success)
             {
-                bool success = _customerHandler.LoginCustomer(objUser.Username, objUser.Password);
-                if (success)
-                {
-                    var tables = from c in _customerHandler.CustomerList()
-                                 select new CustomerViewModel
-                                 {
-                                     customerVm = c
-                                 };
-                    var customer = tables.Where(x => x.customerVm.Username == objUser.Username && x.customerVm.Password == objUser.Password).First();
-                    // create dictionary for cart
-                    Dictionary<int, int> cart = new Dictionary<int, int>();
-                    // serialize customer into a string
-                    HttpContext.Session.SetString("customerSession", JsonConvert.SerializeObject(customer));
+                var tables = from c in _customerHandler.CustomerList()
+                             select new CustomerViewModel
+                             {
+                                 customerVm = c
+                             };
+                var customer = tables.Where(x => x.customerVm.Username == objUser.Username && x.customerVm.Password == objUser.Password).First();
+                // create dictionary for cart
+                Dictionary<int, int> cart = new Dictionary<int, int>();
+                // serialize customer into a string
+                HttpContext.Session.SetString("customerSession", JsonConvert.SerializeObject(customer));
+                if (HttpContext.Session.GetString("cart") == null || HttpContext.Session.GetString("cart") == "{}")
                     HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(cart));
-                    return RedirectToAction("Details", "Account");
-                }
-                else
-                    return View("Index");
+                return RedirectToAction("Details", "Account");
             }
-            return View("Index");
+            else
+                return View("Index");
         }
 
         public IActionResult Logout()
