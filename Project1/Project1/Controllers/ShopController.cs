@@ -222,7 +222,26 @@ namespace Project1.Controllers
 
         public IActionResult Checkout()
         {
-            return View();
+            if(HttpContext.Session.GetString("customerSession") == null || HttpContext.Session.GetString("customerSession") == "{}")
+            {
+                ViewData["Message"] = "A Customer account is required to checkout, please login or create an account.";
+                return RedirectToAction("Index", "Account");
+            }
+            if (HttpContext.Session.GetString("cart") == null || HttpContext.Session.GetString("cart") == "{}")
+            {
+                ViewData["Message"] = "Shopping Cart is empty, please add some items and try again.";
+                return View("CustomError");
+            }
+            int customerId = JsonConvert.DeserializeObject<CustomerViewModel>(HttpContext.Session.GetString("customerSession")).customerVm.Id;
+            int storeId = (int)HttpContext.Session.GetInt32("storeSession");
+            bool success = _invoiceHandler.NewOrder(storeId, customerId, JsonConvert.DeserializeObject<Dictionary<int,int>>(HttpContext.Session.GetString("cart")));
+            if(!success)
+            {
+                ViewData["Message"] = "Something went wrong.";
+                return View("CustomError");
+            }
+            HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(new Dictionary<int, int>()));
+            return View("OrderSuccess");
         }
     }
 }

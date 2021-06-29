@@ -20,7 +20,8 @@ namespace Project1DbContext
 
         [Display(Name = "Product Name")]
         public string Name { get; set; }
-
+        
+        [Display(Name = "Price per Item")]
         public decimal Price { get; set; }
         
         [Display(Name = "Product Description")]

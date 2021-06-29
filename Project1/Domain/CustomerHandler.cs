@@ -1,4 +1,6 @@
-﻿using Project1DbContext;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Project1DbContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,29 +20,40 @@ namespace Domain
         }
 
         /// <summary>
-        /// Returns true if customer credentials match an entry in the database.
+        /// Returns string with result of checking customer credentials.
         /// </summary>
         /// <param name="username">Username of customer.</param>
         /// <param name="password">Password of customer.</param>
-        /// <returns>Boolean reflecting if customer exists with specified credentials.</returns>
-        public bool LoginCustomer(string username, string password)
+        /// <returns>String with result of attempting to login with given credentials</returns>
+        public string LoginCustomer(string username, string password)
         {
-            bool success = false;
+            string result = "";
             try
             {
-                var temp = _context.Customers.Where(x => x.Username == username && x.Password == password).First();
-                if(temp != null)
+                var temp = _context.Customers.Where(x => x.Username == username).FirstOrDefault();
+                if (temp != null)
                 {
-                    _currentCustomer = temp;
-                    success = true;
+                    if (temp.Password == password)
+                    {
+                        _currentCustomer = temp;
+                    }
+                    else
+                    {
+                        result = "Password does not match, please try again.";
+                    }
+                }
+                else
+                {
+                    result = "There is no Customer with that username. Please try again or create a new account.";
                 }
             }
             catch (Exception)
             {
                 // put log info here
-                return success;                
+                result = "Something went wrong.";
+                return result;                
             }
-            return success;
+            return result;
         }
 
         /// <summary>
@@ -97,6 +110,25 @@ namespace Domain
                 Console.WriteLine("Exception.");
             }
             return store;
+        }
+
+        public bool Add(Customer customer)
+        {
+            bool success = false;
+
+            try
+            {
+                _context.Add(customer);
+                _context.SaveChanges();                
+                success = true;
+            }
+            catch(Exception)
+            {
+                //log stuff
+                return success;
+            }
+
+            return success;
         }
     }
 }

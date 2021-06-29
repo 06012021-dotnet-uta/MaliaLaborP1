@@ -22,7 +22,10 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Shop" asp-action="Index">Shop</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Shop" asp-action="Index">Store Select</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Shop" asp-action="Products">Products</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Index">Account</a>
@@ -31,20 +34,25 @@
                             <a class="nav-link text-light" asp-area="" asp-controller="StoreHistory" asp-action="Index">Store History</a>
                         </li>
                     </ul>
-                </div>
-                <div>
-                    <a asp-area="" asp-controller="Shop" asp-action="Cart"><img src="/Images/cart.png" width="40"></a>
+                    @if (Context.Session.GetString("cart") == null || Context.Session.GetString("cart") == "{}")
+                    {
+                        <a asp-area="" asp-controller="Shop" asp-action="Cart"><img src="/Images/cart.png" width="40"></a>
+                    }
+                    else
+                    {
+                        <a asp-area="" asp-controller="Shop" asp-action="Cart"><img src="/Images/active-cart.png" width="40"></a>
+                    }
                     <a asp-area="" asp-controller="Account" asp-action="Index"><img class="m-3" src="/Images/user.png" width="40"></a>
                     @{if (Context.Session.GetString("customerSession") != null)
                         {
                             var temp = JsonConvert.DeserializeObject<CustomerViewModel>(Context.Session.GetString("customerSession"));
-                            <p>@temp.customerVm.Username</p>
-                            if (Context.Session.GetInt32("storeSession") != null && Context.Session.GetInt32("storeSession") != 0)
-                            {
-                                //add store stuff here for nav bar
-                            }
+                            <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Details">@temp.customerVm.Username</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
                         }
                     }
+                </div>
+                <div>
+
                 </div>
             </div>
         </nav>
