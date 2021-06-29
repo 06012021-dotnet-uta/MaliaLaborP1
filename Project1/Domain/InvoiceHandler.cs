@@ -228,5 +228,49 @@ namespace Domain
                 _shoppingCart = new Dictionary<int, int>();
             }
         }
+
+        public bool NewOrder(int storeId, int customerId, Dictionary<int,int> cart)
+        {
+            bool success = false;
+            try
+            {
+                Invoice newInvoice = new();
+                newInvoice.StoreId = storeId;
+                newInvoice.CustomerId = customerId;
+
+                _context.Add(newInvoice);
+                _context.SaveChanges();
+                int returnId = newInvoice.Id;
+                foreach(var item in cart)
+                {
+                    OrderLine newLine = new()
+                    {
+                        ProductId = item.Key,
+                        Amount = item.Value,
+                        InvoiceId = returnId
+                    };
+                    _context.Add(newLine);
+
+                    var inventoriesList = _context.Inventories.Where(x => x.ProductId == item.Key).ToList();
+                    foreach (var listing in inventoriesList)
+                    {
+                        if (listing.StoreId == storeId)
+                        {
+                            // update product count in inventory
+                            listing.Amount -= item.Value;
+                            _context.Inventories.Update(listing);
+                        }
+                    }
+                    _context.SaveChanges();
+                }
+                success = true;
+            }
+            catch (Exception)
+            {
+
+                return success;
+            }
+            return success;
+        }
     }
 }

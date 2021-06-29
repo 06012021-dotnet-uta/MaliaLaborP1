@@ -38,7 +38,31 @@ namespace Project1.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            return View("CreateCustomer");
+        }
+
+        [HttpPost]
+        public ActionResult CreateCustomer(Customer customer)
+        {
+            if (!ModelState.IsValid)
+                RedirectToAction("Create");
+            bool success = _customerHandler.Add(customer);
+            if (success)
+            {
+                var tables = from c in _customerHandler.CustomerList()
+                             select new CustomerViewModel
+                             {
+                                 customerVm = c
+                             };
+                var cust = tables.Where(x => x.customerVm.Id == customer.Id).FirstOrDefault();
+                HttpContext.Session.SetString("customerSession", JsonConvert.SerializeObject(cust));
+                return View("Details");
+            }
+            else
+            {
+                ViewData["Message"] = "Something went wrong.";
+                return View("CustomError");
+            }
         }
 
         public IActionResult Delete()
@@ -61,24 +85,25 @@ namespace Project1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(Customer objUser)
         {
-            bool success = _customerHandler.LoginCustomer(objUser.Username, objUser.Password);
-            if (success)
+            string result = _customerHandler.LoginCustomer(objUser.Username, objUser.Password);
+            ViewData["Message"] = result;
+            if (result == "") // login successful
             {
                 var tables = from c in _customerHandler.CustomerList()
                              select new CustomerViewModel
                              {
                                  customerVm = c
                              };
-                var customer = tables.Where(x => x.customerVm.Username == objUser.Username && x.customerVm.Password == objUser.Password).First();
-                // create dictionary for cart
+                var customer = tables.Where(x => x.customerVm.Username == objUser.Username).First();
                 Dictionary<int, int> cart = new Dictionary<int, int>();
                 // serialize customer into a string
                 HttpContext.Session.SetString("customerSession", JsonConvert.SerializeObject(customer));
+                // create cart if it doesnt already exist
                 if (HttpContext.Session.GetString("cart") == null || HttpContext.Session.GetString("cart") == "{}")
                     HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(cart));
                 return RedirectToAction("Details", "Account");
             }
-            else
+            else // login not successful, return to login screen
                 return View("Index");
         }
 
