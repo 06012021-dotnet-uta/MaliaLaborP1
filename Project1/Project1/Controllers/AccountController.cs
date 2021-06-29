@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 namespace Project1.Controllers
 {
     public class AccountController : Controller
-    {
+    {        
         private readonly ILogger<AccountController> _logger;
         private readonly CustomerHandler _customerHandler;
 
@@ -26,7 +26,7 @@ namespace Project1.Controllers
 
         public IActionResult Index()
         {
-            if (HttpContext.Session.GetString("customerSession") == null)
+            if (HttpContext.Session.GetString("customerSession") == null || HttpContext.Session.GetString("customerSession") == "{}")
             {
                 return View();
             }
@@ -72,8 +72,11 @@ namespace Project1.Controllers
                                      customerVm = c
                                  };
                     var customer = tables.Where(x => x.customerVm.Username == objUser.Username && x.customerVm.Password == objUser.Password).First();
-                    //serialize customer into a string
-                    HttpContext.Session.SetString("customerSession", JsonConvert.SerializeObject(customer));                    
+                    // create dictionary for cart
+                    Dictionary<int, int> cart = new Dictionary<int, int>();
+                    // serialize customer into a string
+                    HttpContext.Session.SetString("customerSession", JsonConvert.SerializeObject(customer));
+                    HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(cart));
                     return RedirectToAction("Details", "Account");
                 }
                 else

@@ -13,7 +13,7 @@ namespace Domain
 
         public ProductHandler(Project1DBContext context)
         {
-            this._context = context;            
+            this._context = context;
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Domain
             {
                 products = _context.Products.ToList();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 Console.WriteLine("Exception.");
             }
@@ -39,7 +39,7 @@ namespace Domain
             Product product = null;
             try
             {
-                product = _context.Products.Where(x => x.Id ==productId).FirstOrDefault();
+                product = _context.Products.Where(x => x.Id == productId).FirstOrDefault();
             }
             catch (Exception)
             {
@@ -83,6 +83,26 @@ namespace Domain
                 Console.WriteLine("Exception.");
             }
             return inventoryList;
+        }
+
+        public bool CheckInventory(int productId, int amount, int storeId)
+        {
+            bool success = false;
+            try
+            {
+                var inventoryList = InventoryList(storeId);
+                var inventory = inventoryList.Where(x => x.ProductId == productId).First();
+                if (inventoryList != null && inventory != null && inventory.Amount >= amount)
+                {
+                    success = true;
+                }
+            }
+            catch (Exception)
+            {
+                //log error
+
+            }
+            return success;
         }
     }
 }
