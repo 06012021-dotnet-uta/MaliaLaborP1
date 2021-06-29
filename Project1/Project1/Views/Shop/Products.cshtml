@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Project1.Models.ProductViewModel>
+﻿@using Microsoft.AspNetCore.Http 
+
+@model IEnumerable<Project1.Models.ProductViewModel>
 
 @{
     ViewData["Title"] = "Products";
@@ -33,7 +35,7 @@
                             <img src= "@Url.Content(item.productPictureVm.SmallPath)" style="vertical-align:top" height="50">
                         </td>
                         <td>
-                            <a class="text-light mx-auto" asp-action="Details" asp-route-id="@item.productVm.Id">@Html.DisplayFor(modelItem => item.productVm.Name)</a>
+                            <a class="text-light mx-auto" asp-action="Details" asp-route-storeId="@Context.Session.GetInt32("storeSession")" asp-route-productId="@item.productVm.Id">@Html.DisplayFor(modelItem => item.productVm.Name)</a>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.productVm.Price)

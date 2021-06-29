@@ -1,4 +1,7 @@
 ﻿@model Project1.Models.ProductViewModel
+@using Newtonsoft.Json;
+@using Microsoft.AspNetCore.Http;
+
 
 @{ ViewData["Title"] = "Product Details"; }
 
@@ -24,8 +27,21 @@
     <div class="col-4">
         <h4>Inventory count:</h4>@Html.DisplayFor(modelItem => Model.inventoryVm.Amount)
     </div>
-    <div class="col-4">
-        <h4>Add to cart:</h4>
-        <p>put in text box and button for adding to cart</p>
-    </div>
+</div>
+<br />
+<div class="col-2">
+    <h4>Add to cart:</h4>
+    <form asp-action="Add">
+        <div>
+            <label class="control-label">Amount</label>
+            <input name="amount" class="form-control" />
+            <span class="text-danger"></span>
+            @{
+                if (Context.Session.GetInt32("storeSession") != null && Context.Session.GetInt32("storeSession") != 0) // send amount to add view
+                {
+                    <input type="submit" asp-controller="Shop" asp-action="Add" asp-route-storeId="@Context.Session.GetInt32("storeSession")" asp-route-productId="@Html.ValueFor(model => Model.productVm.Id)" value="Add to cart" />
+                }
+            }
+        </div>
+    </form>
 </div>

@@ -1,8 +1,46 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Http;
+@using Newtonsoft.Json;
+
+@{
     ViewData["Title"] = "View Cart";
 }
 
 <div class="text-center">
-    <h1 class="display-4">view shopping cart</h1>
-    <p>display details of cart</p>
+    <h1 class="display-4">Shopping Cart</h1>
+
+    @{
+        if (Context.Session.GetString("cart") != null && Context.Session.GetString("cart") != "{}")
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            Product Id
+                        </th>
+                        <th>
+                            Count
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in JsonConvert.DeserializeObject<Dictionary<int, int>>(Context.Session.GetString("cart")))
+                    {
+                        <tr>
+                            <td>
+                                @item.Key
+                            </td>
+                            <td>
+                                @item.Value
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Shopping cart is empty</p>
+        }
+    }
+
 </div>
