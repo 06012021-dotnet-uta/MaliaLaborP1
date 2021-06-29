@@ -34,6 +34,11 @@ namespace Domain
             return products;
         }
 
+        /// <summary>
+        /// Accesses the database to search for a Product with a given ID.
+        /// </summary>
+        /// <param name="productId">ID of Product to search for.</param>
+        /// <returns>Product object with matching ID.</returns>
         public Product SearchProduct(int productId)
         {
             Product product = null;
@@ -51,7 +56,7 @@ namespace Domain
         /// <summary>
         /// Accesses the database to return list of pictures associated with products.
         /// </summary>
-        /// <returns>List of ProductPicture obbjects within the database.</returns>
+        /// <returns>List of ProductPicture objects within the database.</returns>
         public List<ProductPicture> PicturesList()
         {
             List<ProductPicture> pictures = null;
@@ -85,6 +90,13 @@ namespace Domain
             return inventoryList;
         }
 
+        /// <summary>
+        /// Checks if a store has enough inventory.
+        /// </summary>
+        /// <param name="productId">ID of product to search inventory for.</param>
+        /// <param name="amount">Amount to check in inventory.</param>
+        /// <param name="storeId">ID of store for inventory.</param>
+        /// <returns>Boolean reflecting if inventory has sufficient amount to fulfil order.</returns>
         public bool CheckInventory(int productId, int amount, int storeId)
         {
             bool success = false;
