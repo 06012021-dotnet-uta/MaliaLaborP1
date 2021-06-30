@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    public class CustomerHandler
+    public class CustomerHandler : ICustomerHandler
     {
         private Project1DBContext _context;
         private Customer _currentCustomer;
@@ -51,7 +51,7 @@ namespace Domain
             {
                 // put log info here
                 result = "Something went wrong.";
-                return result;                
+                return result;
             }
             return result;
         }
@@ -133,10 +133,10 @@ namespace Domain
             try
             {
                 _context.Add(customer);
-                _context.SaveChanges();                
+                _context.SaveChanges();
                 success = true;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 //log stuff
                 return success;

@@ -12,11 +12,11 @@ namespace Project1.Controllers
     public class StoreHistoryController : Controller
     {
         private readonly ILogger<StoreHistoryController> _logger;
-        private readonly ProductHandler _productHandler;
-        private readonly StoreHandler _storeHandler;
-        private readonly InvoiceHandler _invoiceHandler;
+        private readonly IProductHandler _productHandler;
+        private readonly IStoreHandler _storeHandler;
+        private readonly IInvoiceHandler _invoiceHandler;
 
-        public StoreHistoryController(ProductHandler productHandler, StoreHandler storeHandler, InvoiceHandler invoiceHandler, ILogger<StoreHistoryController> logger)
+        public StoreHistoryController(IProductHandler productHandler, IStoreHandler storeHandler, IInvoiceHandler invoiceHandler, ILogger<StoreHistoryController> logger)
         {
             this._productHandler = productHandler;
             this._storeHandler = storeHandler;

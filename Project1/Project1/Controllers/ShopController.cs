@@ -15,11 +15,11 @@ namespace Project1.Controllers
     public class ShopController : Controller
     {
         private readonly ILogger<ShopController> _logger;
-        private readonly ProductHandler _productHandler;
-        private readonly StoreHandler _storeHandler;
-        private readonly InvoiceHandler _invoiceHandler;
+        private readonly IProductHandler _productHandler;
+        private readonly IStoreHandler _storeHandler;
+        private readonly IInvoiceHandler _invoiceHandler;
 
-        public ShopController(ProductHandler productHandler, StoreHandler storeHandler, ILogger<ShopController> logger, InvoiceHandler invoiceHandler)
+        public ShopController(IProductHandler productHandler, IStoreHandler storeHandler, ILogger<ShopController> logger, IInvoiceHandler invoiceHandler)
         {
             this._productHandler = productHandler;
             this._storeHandler = storeHandler;
@@ -30,12 +30,23 @@ namespace Project1.Controllers
         public IActionResult Index()
         {
             if (HttpContext.Session.GetInt32("storeSession") != null && HttpContext.Session.GetInt32("storeSession") != 0) // store is set already, ask to change store
-            {
+            {                
                 return View("ChangeStore");
             }
-            else
+            else // store not set
             {
-                var stores = from s in _storeHandler.StoreList()
+                if (HttpContext.Session.GetString("customerSession") != null && HttpContext.Session.GetString("customerSession") != "{}") // customer logged in, look for preferred store
+                {
+                    var customer = JsonConvert.DeserializeObject<CustomerViewModel>(HttpContext.Session.GetString("customerSession"));
+                    // set pref store session stuff
+                    if (HttpContext.Session.GetInt32("prefStore") != 0 && HttpContext.Session.GetInt32("prefStore") != null) // preferred store is set
+                    {
+                        HttpContext.Session.SetInt32("storeSession", (int)HttpContext.Session.GetInt32("prefStore"));
+                        HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(new Dictionary<int, int>()));
+                        return RedirectToAction("Products");
+                    }
+                }
+                    var stores = from s in _storeHandler.StoreList()
                              select new StoreHistoryViewModel
                              {
                                  storeVm = s
@@ -80,7 +91,7 @@ namespace Project1.Controllers
                              city = store.City,
                              region = store.Region
                          };
-            return View("Products", tables);
+            return RedirectToAction("Products");
         }
 
         public IActionResult Details(int? storeId, int? productId)

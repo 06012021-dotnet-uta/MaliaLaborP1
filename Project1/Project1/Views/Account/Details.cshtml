@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Http;
-
-@model Project1.Models.CustomerViewModel
+﻿@model Project1.Models.CustomerViewModel
 
 @{
     ViewData["Title"] = "Account Details";
@@ -17,17 +15,27 @@
     }
 </div>
 
-<div class="d-flex flex-row">
+<div>
     <div>
         @if (Model != null)
         {
             <h3 class="text-center">Account Details</h3>
-            <h4>@Html.DisplayNameFor(model => model.customerVm.Username)</h4>
-            <p>@Html.DisplayFor(model => Model.customerVm.Username)</p>
-            <h4>@Html.DisplayNameFor(model => model.customerVm.FirstName)</h4>
-            <p>@Html.DisplayFor(model => Model.customerVm.FirstName)</p>
-            <h4>@Html.DisplayNameFor(model => model.customerVm.LastName)</h4>
-            <p>@Html.DisplayFor(model => Model.customerVm.LastName)</p>
+            <table class="table text-light">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.customerVm.Username)</th>
+                        <th>@Html.DisplayNameFor(model => model.customerVm.FirstName)</th>
+                        <th>@Html.DisplayNameFor(model => model.customerVm.LastName)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Html.DisplayFor(model => Model.customerVm.Username)</td>
+                        <td>@Html.DisplayFor(model => Model.customerVm.FirstName)</td>
+                        <td>@Html.DisplayFor(model => Model.customerVm.LastName)</td>
+                    </tr>
+                </tbody>
+            </table>
         }
         else
         {
@@ -37,5 +45,7 @@
 </div>
 
 <div>
-    <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="History">Order History</a>
+
+    <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+    <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="PreferredStore">Set Preferred Store</a>
 </div>

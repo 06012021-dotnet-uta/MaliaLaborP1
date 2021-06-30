@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    public class ProductHandler
+    public class ProductHandler : IProductHandler
     {
         private Project1DBContext _context;
 
