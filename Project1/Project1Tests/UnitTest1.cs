@@ -236,14 +236,12 @@ namespace Project1Tests
         {
             using (var context = new Project1DBContext(options))
             {
-                // arrange
                 // act
                 context.Database.EnsureCreated();
                 context.Database.EnsureDeleted();
                 StoreHandler storeHandler = new StoreHandler(context);
                 context.SaveChanges();
                 var result = storeHandler.StoreList();
-
                 // assert
                 Assert.Empty(result);
             }
