@@ -33,6 +33,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="StoreHistory" asp-action="Index">Store History</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Lookup">Customer Lookup</a>
+                        </li>
                     </ul>
                     @if (Context.Session.GetString("cart") == null || Context.Session.GetString("cart") == "{}")
                     {

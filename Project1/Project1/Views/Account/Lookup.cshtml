@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Project1DbContext.Customer>
+
+@{
+    ViewData["Title"] = "Lookup Customer";
+}
+
+<h1>Lookup</h1>
+<div class="d-flex flex-row">
+    <div class="col-4">
+        <form asp-action="Search">
+            <div class="form-group">
+                <label class="control-label">First Name</label>
+                <input type="text" id="firstName" name="firstName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Last Name</label>
+                <input type="text" id="lastName" name="lastName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+
+    @if (Model != null)
+    {
+        <div class="col-6">
+            <table class="table text-light">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Id)</th>
+                        <th>@Html.DisplayNameFor(model => model.FirstName)</th>
+                        <th>@Html.DisplayNameFor(model => model.LastName)</th>
+                        <th>@Html.DisplayNameFor(model => model.Username)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.FirstName</td>
+                                <td>@item.LastName</td>
+                                <td>@item.Username</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

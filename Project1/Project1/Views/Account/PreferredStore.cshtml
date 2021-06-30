@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Project1DbContext.Store>
+
+@{
+    ViewData["Title"] = "PreferredStore";
+}
+
+<h1>Set Preferred Store</h1>
+<div>
+    <form asp-action="SetPreferredStore">
+        <label for="stores">Choose a Store:</label>
+        <select name="storeId" id="id">
+            @foreach (var item in Model)
+            {
+                <option value="@item.Id">@Html.DisplayFor(model => item.City)</option>
+            }
+        </select>
+        <input type="submit" value="Set Store" />
+    </form>
+</div>

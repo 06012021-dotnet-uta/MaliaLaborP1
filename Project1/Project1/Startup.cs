@@ -36,10 +36,10 @@ namespace Project1
             });
             services.AddMvc().AddSessionStateTempDataProvider();
             services.AddSession();
-            services.AddScoped<CustomerHandler>();
-            services.AddScoped<InvoiceHandler>();
-            services.AddScoped<ProductHandler>();
-            services.AddScoped<StoreHandler>();
+            services.AddScoped<ICustomerHandler, CustomerHandler>();
+            services.AddScoped<IInvoiceHandler, InvoiceHandler>();
+            services.AddScoped<IProductHandler, ProductHandler>();
+            services.AddScoped<IStoreHandler, StoreHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

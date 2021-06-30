@@ -7,13 +7,60 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    public class StoreHandler
+    public class StoreHandler : IStoreHandler
     {
         private Project1DBContext _context;
 
         public StoreHandler(Project1DBContext context)
         {
             this._context = context;
+        }
+
+        public bool SetPreferredStore(int storeId, int customerId)
+        {
+            bool success = false;
+
+            try
+            {
+                if (_context.PreferredStores.Where(x => x.CustomerId == customerId).FirstOrDefault() == null) // new entry to table
+                {
+                    var temp = new PreferredStore()
+                    {
+                        CustomerId = customerId,
+                        StoreId = storeId
+                    };
+                    _context.Add(temp);
+                    _context.SaveChanges();
+                }
+                else // preferred store exists 
+                {
+                    var temp = _context.PreferredStores.Where(x => x.CustomerId == customerId).FirstOrDefault();
+                    temp.StoreId = storeId;
+                    _context.PreferredStores.Update(temp);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                return success;
+            }
+
+            return success;
+        }
+
+        public List<PreferredStore> PreferredStoreList()
+        {
+            List<PreferredStore> stores = null;
+            try
+            {
+                stores = _context.PreferredStores.ToList();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Exception.");
+            }
+            return stores;
         }
 
         /// <summary>

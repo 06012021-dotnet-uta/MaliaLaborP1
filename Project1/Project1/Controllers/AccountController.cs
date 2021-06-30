@@ -16,12 +16,12 @@ namespace Project1.Controllers
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
-        private readonly CustomerHandler _customerHandler;
-        private readonly InvoiceHandler _invoiceHandler;
-        private readonly StoreHandler _storeHandler;
-        private readonly ProductHandler _productHandler;
+        private readonly ICustomerHandler _customerHandler;
+        private readonly IInvoiceHandler _invoiceHandler;
+        private readonly IStoreHandler _storeHandler;
+        private readonly IProductHandler _productHandler;
 
-        public AccountController(CustomerHandler customerHandler, InvoiceHandler invoiceHandler, StoreHandler storeHandler, ProductHandler productHandler, ILogger<AccountController> logger)
+        public AccountController(ICustomerHandler customerHandler, IInvoiceHandler invoiceHandler, IStoreHandler storeHandler, IProductHandler productHandler, ILogger<AccountController> logger)
         {
             this._logger = logger;
             this._customerHandler = customerHandler;
@@ -42,9 +42,47 @@ namespace Project1.Controllers
             }
         }
 
-        public IActionResult Search()
+        public IActionResult PreferredStore()
         {
-            return View();
+            var stores = _storeHandler.StoreList();
+            return View(stores);
+        }
+
+        public IActionResult SetPreferredStore(int storeId)
+        {
+            int customerId = JsonConvert.DeserializeObject<CustomerViewModel>(HttpContext.Session.GetString("customerSession")).customerVm.Id;
+            bool success = _storeHandler.SetPreferredStore(storeId, customerId);
+            HttpContext.Session.SetInt32("prefStore", storeId);
+            if (success)
+                return View();
+            else
+                return RedirectToAction("Details");
+        }
+
+        public IActionResult Search(string firstName, string lastName)
+        {
+            if (firstName != null && lastName != null && _customerHandler.CustomerList().Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower()) != null) // both names included
+            {
+                var customers = _customerHandler.CustomerList().Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower());
+                return View("Lookup", customers);
+            }
+            if (firstName == null && _customerHandler.CustomerList().Where(x => x.LastName.ToLower() == lastName.ToLower()) != null) // only last name given
+            {
+                var customers = _customerHandler.CustomerList().Where(x => x.LastName.ToLower() == lastName.ToLower());
+                return View("Lookup", customers);
+            }
+            if (lastName == null && _customerHandler.CustomerList().Where(x => x.FirstName.ToLower() == firstName.ToLower()) != null) // only first name given
+            {
+                var customers = _customerHandler.CustomerList().Where(x => x.FirstName.ToLower() == firstName.ToLower());
+                return View("Lookup", customers);
+            }
+            return View("Lookup", _customerHandler.CustomerList());
+        }
+
+        public IActionResult Lookup()
+        {
+            var customers = _customerHandler.CustomerList();
+            return View(customers);
         }
 
         public IActionResult Create()
@@ -67,13 +105,7 @@ namespace Project1.Controllers
                              };
                 var cust = tables.Where(x => x.customerVm.Id == customer.Id).FirstOrDefault();
                 HttpContext.Session.SetString("customerSession", JsonConvert.SerializeObject(cust));
-                var temp = from c in _customerHandler.CustomerList()
-                           select new CustomerHistoryViewModel
-                           {
-                               customerVm = c
-                           };
-                var history = temp.Where(x => x.customerVm.Id == customer.Id);
-                return View("Details", history);
+                return View("Details", cust);
             }
             else
             {
@@ -107,12 +139,20 @@ namespace Project1.Controllers
                 var tables = from c in _customerHandler.CustomerList()
                              select new CustomerViewModel
                              {
-                                 customerVm = c
+                                 customerVm = c,
                              };
-                var customer = tables.Where(x => x.customerVm.Username == objUser.Username).First();
+                var customer = tables.Where(x => x.customerVm.Username == objUser.Username).FirstOrDefault();
                 Dictionary<int, int> cart = new Dictionary<int, int>();
+                // set pref store session
+                if (_storeHandler.PreferredStoreList().Where(x => x.CustomerId == customer.customerVm.Id).FirstOrDefault() != null)
+                    HttpContext.Session.SetInt32("prefStore", _storeHandler.PreferredStoreList().Where(x => x.CustomerId == customer.customerVm.Id).FirstOrDefault().CustomerId);
                 // serialize customer into a string
-                HttpContext.Session.SetString("customerSession", JsonConvert.SerializeObject(customer));
+                HttpContext.Session.SetString("customerSession", JsonConvert.SerializeObject(customer, Formatting.Indented,
+                new JsonSerializerSettings()
+                {
+                    ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                }
+                ));
                 // create cart if it doesnt already exist
                 if (HttpContext.Session.GetString("cart") == null || HttpContext.Session.GetString("cart") == "{}")
                     HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(cart));

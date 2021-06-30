@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    public class InvoiceHandler
+    public class InvoiceHandler : IInvoiceHandler
     {
         private Project1DBContext _context;
         private Dictionary<int, int> _shoppingCart; //.Key is product ID and .Value is count
-        private ProductHandler _productHandler;
+        private IProductHandler _productHandler;
 
-        public InvoiceHandler(Project1DBContext context, ProductHandler productHandler)
+        public InvoiceHandler(Project1DBContext context, IProductHandler productHandler)
         {
             this._context = context;
             this._productHandler = productHandler;
@@ -44,7 +44,7 @@ namespace Domain
         /// <returns>List of Invoices associated with Store with given ID</returns>
         public List<Invoice> SearchInvoicesByStore(int storeId)
         {
-            List <Invoice> invoices = null;
+            List<Invoice> invoices = null;
             try
             {
                 invoices = _context.Invoices.Where(x => x.StoreId == storeId).ToList();
@@ -160,18 +160,6 @@ namespace Domain
             return success;
         }
 
-        /// <summary>
-        /// Attempts to add entries to database for a new invoice and its related lines.
-        /// </summary>
-        /// <returns>Boolean reflecting the success of making changes to the database.</returns>
-        public bool Checkout()
-        {
-            bool success = false;
-
-            //add to db, maybe return orderid
-
-            return success;
-        }
 
         /// <summary>
         /// Adds up grand total of cart products.
@@ -220,18 +208,18 @@ namespace Domain
         public void CleanCart()
         {
             bool isEmpty = true;
-            foreach(var item in _shoppingCart)
+            foreach (var item in _shoppingCart)
             {
                 if (item.Value != 0)
                     isEmpty = false;
             }
-            if(isEmpty)
+            if (isEmpty)
             {
                 _shoppingCart = new Dictionary<int, int>();
             }
         }
 
-        public bool NewOrder(int storeId, int customerId, Dictionary<int,int> cart)
+        public bool NewOrder(int storeId, int customerId, Dictionary<int, int> cart)
         {
             bool success = false;
             try
@@ -243,7 +231,7 @@ namespace Domain
                 _context.Add(newInvoice);
                 _context.SaveChanges();
                 int returnId = newInvoice.Id;
-                foreach(var item in cart)
+                foreach (var item in cart)
                 {
                     OrderLine newLine = new()
                     {
