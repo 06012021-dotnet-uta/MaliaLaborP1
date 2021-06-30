@@ -32,7 +32,7 @@ namespace Project1.Controllers
 
         public IActionResult Index()
         {
-            if (HttpContext.Session.GetString("customerSession") == null || HttpContext.Session.GetString("customerSession") == "{}")
+            if (HttpContext.Session.GetString("customerSession") == null || HttpContext.Session.GetString("customerSession") == "{}" || !ModelState.IsValid)
             {
                 return View();
             }
@@ -40,6 +40,11 @@ namespace Project1.Controllers
             {
                 return RedirectToAction("Details", "Account");
             }
+        }
+
+        public IActionResult Search()
+        {
+            return View();
         }
 
         public IActionResult Create()
@@ -62,12 +67,18 @@ namespace Project1.Controllers
                              };
                 var cust = tables.Where(x => x.customerVm.Id == customer.Id).FirstOrDefault();
                 HttpContext.Session.SetString("customerSession", JsonConvert.SerializeObject(cust));
-                return View("Details");
+                var temp = from c in _customerHandler.CustomerList()
+                           select new CustomerHistoryViewModel
+                           {
+                               customerVm = c
+                           };
+                var history = temp.Where(x => x.customerVm.Id == customer.Id);
+                return View("Details", history);
             }
             else
             {
-                ViewData["Message"] = "Something went wrong.";
-                return View("CustomError");
+                ViewData["Message"] = $"Customer already exists with username {customer.Username}";
+                return View();
             }
         }
 
@@ -81,35 +92,8 @@ namespace Project1.Controllers
             if (HttpContext.Session.GetString("customerSession") == null || HttpContext.Session.GetString("customerSession") == "{}")
                 return View("Index");
             var customer = JsonConvert.DeserializeObject<CustomerViewModel>(HttpContext.Session.GetString("customerSession"));
-            try
-            {
-                var history = from c in _customerHandler.CustomerList()
-                              join i in _invoiceHandler.SearchInvoicesByCustomer((int)customer.customerVm.Id) on c.Id equals i.CustomerId
-                              join s in _storeHandler.StoreList() on i.StoreId equals s.Id
-                              join o in _invoiceHandler.OrderLineList() on i.Id equals o.InvoiceId
-                              join p in _productHandler.ProductList() on o.ProductId equals p.Id
-                              select new CustomerHistoryViewModel
-                              {
-                                  invoiceVm = i,
-                                  orderLineVm = o,
-                                  storeVm = s,
-                                  productVm = p,
-                                  customerVm = c
-                              };
 
-                return View(history);
-            }
-            catch (Exception)
-            {
-                ViewData["Message"] = "Something went wrong";
-                return View("CustomError");
-            }
-            
-        }
-
-        public IActionResult History()
-        {
-            return View();
+            return View(customer);
         }
 
         [HttpPost]
@@ -132,10 +116,33 @@ namespace Project1.Controllers
                 // create cart if it doesnt already exist
                 if (HttpContext.Session.GetString("cart") == null || HttpContext.Session.GetString("cart") == "{}")
                     HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(cart));
-                return RedirectToAction("Details", "Account");
+                return View("Details", customer);
             }
             else // login not successful, return to login screen
                 return View("Index");
+        }
+
+        public IActionResult History()
+        {
+            if (HttpContext.Session.Get("customerSession") == null || HttpContext.Session.GetString("customerSession") == "{}") // customer is not logged in
+                return View("Index");
+            var customer = JsonConvert.DeserializeObject<CustomerViewModel>(HttpContext.Session.GetString("customerSession"));
+
+            var tables = from c in _customerHandler.CustomerList()
+                         join i in _invoiceHandler.InvoiceList() on c.Id equals i.CustomerId
+                         join s in _storeHandler.StoreList() on i.StoreId equals s.Id
+                         join o in _invoiceHandler.OrderLineList() on i.Id equals o.InvoiceId
+                         join p in _productHandler.ProductList() on o.ProductId equals p.Id
+                         select new CustomerHistoryViewModel
+                         {
+                             invoiceVm = i,
+                             orderLineVm = o,
+                             storeVm = s,
+                             productVm = p,
+                             customerVm = c
+                         };
+            var history = tables.Where(x => x.customerVm.Id == customer.customerVm.Id);
+            return View(history);
         }
 
         public IActionResult Logout()

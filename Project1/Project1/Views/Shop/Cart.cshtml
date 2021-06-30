@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Http;
 @using Newtonsoft.Json;
 
+@model IEnumerable<Project1DbContext.Product>
+
 @{
     ViewData["Title"] = "View Cart";
 }
@@ -17,32 +19,51 @@
                 <thead>
                     <tr>
                         <th>
-                            Product Id
+                            @Html.DisplayNameFor(model => Model.FirstOrDefault().Name)
                         </th>
                         <th>
                             Count
                         </th>
                         <th>
+                            Subtotal
                         </th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in JsonConvert.DeserializeObject<Dictionary<int, int>>(Context.Session.GetString("cart")))
-                    {
-                        if (item.Value != 0)
+                    @{
+                        decimal total = 0;
+                        foreach (var item in JsonConvert.DeserializeObject<Dictionary<int, int>>(Context.Session.GetString("cart")))
                         {
-                            <tr>
-                                <td>
-                                    @item.Key
-                                </td>
-                                <td>
-                                    @item.Value
-                                </td>
-                                <td>
-                                    <a class="text-light mx-auto" asp-action="Edit" asp-route-productId="@item.Key">Edit</a>
-                                </td>
-                            </tr>
+                            if (item.Value != 0 && Model.Where(x => x.Id == item.Key).FirstOrDefault() != null)
+                            {
+                                decimal subTotal = Model.Where(x => x.Id == item.Key).FirstOrDefault().Price * item.Value;
+                                total += subTotal;
+                                <tr>
+                                    <td>
+                                        @{
+                                            string name = Model.Where(x => x.Id == item.Key).FirstOrDefault().Name;
+                                        }
+                                        @name
+                                    </td>
+                                    <td>
+                                        @item.Value
+                                    </td>
+                                    <td>
+                                        @subTotal
+                                    </td>
+                                    <td>
+                                        <a class="text-light mx-auto" asp-action="Edit" asp-route-productId="@item.Key">Edit</a>
+                                    </td>
+                                </tr>
+                            }
                         }
+                        <tr>
+                            <td></td>
+                            <td>Grand Total: </td>
+                            <td>@total</td>
+                            <td></td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -54,5 +75,5 @@
         }
     }
 
-    <a type="submit" asp-action="Products" value="Back to prodcucts">Back to products</a>   
+    <a type="submit" asp-action="Products" value="Back to prodcucts">Back to products</a>
 </div>

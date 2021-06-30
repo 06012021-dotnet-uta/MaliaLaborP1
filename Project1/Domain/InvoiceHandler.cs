@@ -152,6 +152,8 @@ namespace Domain
                 if (_shoppingCart.ContainsKey(product.Id) && _shoppingCart.Where(x => x.Key == product.Id).First().Value >= amount)
                 {
                     _shoppingCart[product.Id] -= amount;
+                    if (_shoppingCart[productId] == 0)
+                        _shoppingCart.Remove(productId);
                     success = true;
                 }
             }

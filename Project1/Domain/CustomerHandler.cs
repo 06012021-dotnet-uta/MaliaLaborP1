@@ -112,6 +112,20 @@ namespace Domain
             return store;
         }
 
+        public List<PreferredStore> PreferredStoreList()
+        {
+            List<PreferredStore> stores = null;
+            try
+            {
+                stores = _context.PreferredStores.ToList();
+            }
+            catch
+            {
+                Console.WriteLine("Exception.");
+            }
+            return stores;
+        }
+
         public bool Add(Customer customer)
         {
             bool success = false;
