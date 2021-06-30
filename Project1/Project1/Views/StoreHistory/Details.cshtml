@@ -66,8 +66,6 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.invoiceVm.InvoiceDate)
                                     </td>
-
-                                    var product = Model.Where(x => x.productVm.Id == item.productVm.Id).FirstOrDefault();
                                     <td>
                                         @Html.DisplayFor(modelItem => item.productVm.Name)
                                     </td>
@@ -75,7 +73,7 @@
                                         @Html.DisplayFor(modelItem => item.orderLineVm.Amount)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => product.productVm.Price)
+                                        @Html.DisplayFor(modelItem => item.productVm.Price)
                                     </td>
                                 }
 
