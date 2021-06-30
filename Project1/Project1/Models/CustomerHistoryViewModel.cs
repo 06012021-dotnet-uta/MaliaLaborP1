@@ -12,6 +12,7 @@ namespace Project1.Models
         public OrderLine orderLineVm { get; set; }
         public Store storeVm { get; set; }
         public Customer customerVm { get; set; }
+        public PreferredStore prefStoreVm { get; set; }
         public Product productVm { get; set; }
     }
 }

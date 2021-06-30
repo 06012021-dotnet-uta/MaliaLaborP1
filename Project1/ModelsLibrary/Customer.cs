@@ -18,23 +18,23 @@ namespace Project1DbContext
         public int Id { get; set; }
 
 
-        [Required]
+        [Required(ErrorMessage="Please enter your first name")]
         [MaxLength(20)]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please enter your last name")]
         [MaxLength(20)]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
         [Display(Name = "Username")]
-        [Required]
+        [Required(ErrorMessage = "Please enter a username")]
         [MaxLength(20)]        
         public string Username { get; set; }
 
         [Display(Name = "Password")]
-        [Required]
+        [Required(ErrorMessage = "Please enter a password")]
         [MaxLength(20)]
         public string Password { get; set; }
 

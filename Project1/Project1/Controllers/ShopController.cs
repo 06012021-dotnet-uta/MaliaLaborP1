@@ -170,7 +170,7 @@ namespace Project1.Controllers
             }
             if (success)
             {
-                return View("Cart");
+                return View("Cart", _productHandler.ProductList());
             }
             else
             {
@@ -192,7 +192,7 @@ namespace Project1.Controllers
                     _invoiceHandler.CleanCart();
                     // set cart session
                     HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(_invoiceHandler.GetCart()));
-                    return View("Cart");
+                    return View("Cart", _productHandler.ProductList());
                 }
                 else // remove count greater than amount in cart
                 {
@@ -217,7 +217,14 @@ namespace Project1.Controllers
 
         public IActionResult Cart()
         {
-            return View();
+            if(HttpContext.Session.GetString("cart") == null || HttpContext.Session.GetString("cart") == "{}")
+            {
+                ViewData["Message"] = "Shopping cart is empty, please add some items and try again.";
+                return View("CustomError");
+            }
+            var products = _productHandler.ProductList();
+            
+            return View(products);
         }
 
         public IActionResult Checkout()

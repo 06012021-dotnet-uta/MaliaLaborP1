@@ -1,8 +1,124 @@
-﻿@{
+﻿@model IEnumerable<Project1.Models.CustomerHistoryViewModel>
+
+@{
     ViewData["Title"] = "Order History";
 }
 
 <div class="text-center">
     <h1 class="display-4">Customer order history</h1>
-    <p>show store details and stuff</p>
+</div>
+
+<div>
+    @if (Model != null && Model.Any())
+    {
+        <h3 class="text-center">Order History</h3>
+        int prevId = 0;
+        <table class="table text-light">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.invoiceVm.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.storeVm.City)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.invoiceVm.InvoiceDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.productVm.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.orderLineVm.Amount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.productVm.Price)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    decimal total = 0;
+                    foreach (var item in Model)
+                    {
+                        if (item.invoiceVm.Id != prevId) // new invoice entry
+                        {
+                            if (prevId != 0)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Total:</td>
+                                    <td>@total</td>
+                                </tr>
+                            }
+                            <tr>
+                                @{
+                                    total = item.productVm.Price * item.orderLineVm.Amount;
+                                    prevId = item.invoiceVm.Id;
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.invoiceVm.Id)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.storeVm.City)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.invoiceVm.InvoiceDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.productVm.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.orderLineVm.Amount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.productVm.Price)
+                                    </td>
+                                }
+
+                            </tr>
+                        }
+                        else // same invoice
+                        {
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                @{
+                                    //var product = Model.Where(x => x.productVm.Id == item.productVm.Id).First();
+                                    total += item.productVm.Price * item.orderLineVm.Amount;
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.productVm.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.orderLineVm.Amount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.productVm.Price)
+                                    </td>
+                                }
+                            </tr>
+                        }
+                        if (Model.Last().invoiceVm == item.invoiceVm && Model.Last().productVm == item.productVm)
+                        {
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Total:</td>
+                                <td>@total</td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h3 class="text-center">No order history for customer.</h3>
+    }
 </div>
