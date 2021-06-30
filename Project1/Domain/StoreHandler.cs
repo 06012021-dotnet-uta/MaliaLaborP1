@@ -36,7 +36,8 @@ namespace Domain
                 {
                     var temp = _context.PreferredStores.Where(x => x.CustomerId == customerId).FirstOrDefault();
                     temp.StoreId = storeId;
-                    _context.PreferredStores.Update(temp);
+                    _context.Remove(_context.PreferredStores.Where(x => x.CustomerId == customerId).FirstOrDefault());
+                    _context.Add(temp);
                     _context.SaveChanges();
                 }
             }
