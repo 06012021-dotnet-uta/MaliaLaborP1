@@ -158,7 +158,7 @@ namespace Project1.Controllers
                     HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(cart));
                 return View("Details", customer);
             }
-            else // login not successful, return to login screen
+            else // login was not successful, return to login screen
                 return View("Index");
         }
 
@@ -192,3 +192,5 @@ namespace Project1.Controllers
         }
     }
 }
+
+
