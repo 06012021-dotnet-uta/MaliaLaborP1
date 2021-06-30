@@ -17,11 +17,17 @@ namespace Project1.Controllers
     {
         private readonly ILogger<AccountController> _logger;
         private readonly CustomerHandler _customerHandler;
+        private readonly InvoiceHandler _invoiceHandler;
+        private readonly StoreHandler _storeHandler;
+        private readonly ProductHandler _productHandler;
 
-        public AccountController(CustomerHandler customerHandler, ILogger<AccountController> logger)
+        public AccountController(CustomerHandler customerHandler, InvoiceHandler invoiceHandler, StoreHandler storeHandler, ProductHandler productHandler, ILogger<AccountController> logger)
         {
             this._logger = logger;
             this._customerHandler = customerHandler;
+            this._invoiceHandler = invoiceHandler;
+            this._storeHandler = storeHandler;
+            this._productHandler = productHandler;
         }
 
         public IActionResult Index()
@@ -72,8 +78,33 @@ namespace Project1.Controllers
 
         public IActionResult Details()
         {
+            if (HttpContext.Session.GetString("customerSession") == null || HttpContext.Session.GetString("customerSession") == "{}")
+                return View("Index");
             var customer = JsonConvert.DeserializeObject<CustomerViewModel>(HttpContext.Session.GetString("customerSession"));
-            return View(customer);
+            try
+            {
+                var history = from c in _customerHandler.CustomerList()
+                              join i in _invoiceHandler.SearchInvoicesByCustomer((int)customer.customerVm.Id) on c.Id equals i.CustomerId
+                              join s in _storeHandler.StoreList() on i.StoreId equals s.Id
+                              join o in _invoiceHandler.OrderLineList() on i.Id equals o.InvoiceId
+                              join p in _productHandler.ProductList() on o.ProductId equals p.Id
+                              select new CustomerHistoryViewModel
+                              {
+                                  invoiceVm = i,
+                                  orderLineVm = o,
+                                  storeVm = s,
+                                  productVm = p,
+                                  customerVm = c
+                              };
+
+                return View(history);
+            }
+            catch (Exception)
+            {
+                ViewData["Message"] = "Something went wrong";
+                return View("CustomError");
+            }
+            
         }
 
         public IActionResult History()
